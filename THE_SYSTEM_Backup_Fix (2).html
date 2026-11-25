@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050914">
+<title>THE SYSTEM // PLAYER INTERFACE</title>
+<style>
+:root{--bg:#050914;--panel:rgba(10,22,46,.91);--panel2:#07152c;--line:#1e90ff;--cyan:#4deeea;--text:#e6f4ff;--muted:#83a8c9;--green:#00f5d4;--red:#ff5577;--gold:#ffd166;--glow:rgba(30,144,255,.35)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:18px 14px 50px;background:radial-gradient(ellipse at 50% -10%,#16376a 0%,#08142c 38%,var(--bg) 75%);color:var(--text);font-family:Segoe UI,Roboto,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(77,238,234,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(77,238,234,.12) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+.container{max-width:900px;margin:auto;position:relative}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}.brand{font-weight:900;letter-spacing:4px;color:var(--cyan);text-shadow:0 0 14px var(--glow);font-size:1.1rem}.subbrand{font-size:.68rem;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.system-box{background:linear-gradient(145deg,rgba(11,27,55,.96),rgba(5,13,29,.94));border:1px solid rgba(77,238,234,.42);box-shadow:0 0 22px var(--glow),inset 0 0 18px rgba(30,144,255,.08);border-radius:10px;padding:16px;margin-bottom:15px;position:relative;overflow:hidden}
+.system-box:after{content:"";position:absolute;top:0;left:12%;width:76%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.7}
+.system-header{color:var(--cyan);font-weight:800;letter-spacing:2.5px;font-size:.86rem;border-bottom:1px solid rgba(77,238,234,.22);padding-bottom:10px;margin-bottom:14px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.player-name{font-size:1.25rem;font-weight:800}.muted{color:var(--muted)}.level{font-size:2.1rem;font-weight:900;text-shadow:0 0 12px var(--line)}.rank{display:inline-block;border:1px solid var(--cyan);color:var(--cyan);background:rgba(30,144,255,.15);padding:5px 12px;border-radius:5px;font-weight:800;letter-spacing:1px;font-size:.85rem}
+.xp-wrap{height:13px;background:#030a18;border:1px solid rgba(30,144,255,.55);border-radius:20px;overflow:hidden;margin:10px 0 6px}.xp-fill{height:100%;width:0;background:linear-gradient(90deg,#1674df,var(--cyan));box-shadow:0 0 12px var(--cyan);transition:width .35s}
+.xp-row{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted)}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat-card{background:rgba(2,10,24,.7);border:1px solid rgba(30,144,255,.3);border-radius:7px;text-align:center;padding:9px}.stat-name{font-size:.7rem;letter-spacing:1.5px;color:var(--muted)}.stat-val{font-size:1.2rem;color:var(--cyan);font-weight:800;margin-top:3px}
+.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-row{display:grid;gap:9px}.form-inline{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
+input,select,button{font:inherit;color:var(--text);background:#07152d;border:1px solid rgba(30,144,255,.55);border-radius:6px;padding:10px;min-width:0}input:focus,select:focus{outline:1px solid var(--cyan);box-shadow:0 0 9px var(--glow)}button{cursor:pointer;font-weight:750;letter-spacing:.5px;transition:.15s}button:hover{filter:brightness(1.2);transform:translateY(-1px)}button:active{transform:scale(.98)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}.primary{background:linear-gradient(90deg,#1257a8,#167edb);border-color:var(--cyan)}.ghost{background:transparent;border-color:rgba(255,255,255,.2);color:var(--muted)}.danger{border-color:rgba(255,85,119,.55);color:var(--red);background:rgba(255,85,119,.1)}.success{border-color:var(--green);color:var(--green);background:rgba(0,245,212,.1)}.gold{border-color:var(--gold);color:var(--gold);background:rgba(255,209,102,.1)}
+.quest-item,.item-card,.achievement{background:rgba(3,12,28,.75);border:1px solid rgba(30,144,255,.32);border-left:3px solid var(--line);border-radius:7px;padding:11px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:10px}.quest-item.completed{opacity:.55;border-left-color:var(--green)}.quest-info{min-width:0}.quest-info h4{font-size:.93rem;margin:0 0 5px;overflow-wrap:anywhere}.quest-meta{font-size:.73rem;color:var(--cyan)}.actions{display:flex;gap:6px;flex-shrink:0}.actions button{font-size:.72rem;padding:7px 9px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:var(--cyan);font-weight:800;letter-spacing:1.5px;font-size:.84rem}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;margin-bottom:2px}.tab{white-space:nowrap;font-size:.75rem;padding:8px 11px;color:var(--muted)}.tab.active{color:var(--cyan);border-color:var(--cyan);background:rgba(30,144,255,.17)}
+.panel{display:none}.panel.active{display:block}.empty{text-align:center;color:var(--muted);padding:18px;font-size:.86rem}.small{font-size:.75rem}.pill{font-size:.68rem;border:1px solid rgba(77,238,234,.4);border-radius:20px;padding:3px 7px;color:var(--cyan);white-space:nowrap}.progress-track{height:7px;background:#020916;border-radius:9px;overflow:hidden;margin:7px 0}.progress-track span{display:block;height:100%;background:var(--cyan)}
+.stat-upgrade{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(77,238,234,.12)}.stat-upgrade:last-child{border:0}.stat-upgrade button{padding:6px 10px}.inventory-grid,.achievement-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.inventory-grid .item-card,.achievement-grid .achievement{margin:0;display:block}.locked{opacity:.48;filter:grayscale(.5)}.item-icon{font-size:1.5rem;margin-bottom:5px}.modal{display:none;position:fixed;inset:0;background:rgba(0,4,14,.86);z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-card{width:min(420px,100%);background:#081832;border:2px solid var(--cyan);box-shadow:0 0 30px var(--line);border-radius:10px;padding:22px;text-align:center}.modal-card h2{color:var(--cyan);letter-spacing:2px}.modal-card p{line-height:1.55}.footer{text-align:center;color:#56799a;font-size:.68rem;letter-spacing:1px;margin:18px 0}
+@media(max-width:650px){.hero,.grid-two{grid-template-columns:1fr}.form-inline{grid-template-columns:1fr 1fr}.form-inline select:first-child{grid-column:span 2}.stats-grid{grid-template-columns:repeat(3,1fr)}.topbar{align-items:flex-start}.inventory-grid,.achievement-grid{grid-template-columns:1fr 1fr}.quest-item{align-items:flex-start}.actions{flex-direction:column}}
+
+/* UPGRADE 1: HOLOGRAPHIC SYSTEM INTERFACE */
+:root{--cyan:#67f7ff;--line:#38a8ff;--glow:rgba(56,168,255,.42);--panel:rgba(8,19,43,.94)}
+body{background:radial-gradient(ellipse at 50% -12%,#214c88 0%,#091a38 34%,#030711 78%);background-attachment:fixed}
+body:before{opacity:.16;background-size:32px 32px;animation:gridPulse 8s ease-in-out infinite alternate}
+@keyframes gridPulse{from{opacity:.08}to{opacity:.19}}
+.container{max-width:960px}
+.topbar{padding:9px 4px 14px;border-bottom:1px solid rgba(103,247,255,.24);position:relative}
+.topbar:after{content:'SYSTEM ONLINE';font-size:.6rem;letter-spacing:2px;color:#8ffcff;opacity:.65}
+.brand{font-size:1.25rem;letter-spacing:5px;text-shadow:0 0 8px #38a8ff,0 0 22px rgba(103,247,255,.55)}
+.subbrand{letter-spacing:2.4px}
+.system-box{border-radius:4px;border-color:rgba(103,247,255,.43);background:linear-gradient(135deg,rgba(11,30,61,.96),rgba(3,10,24,.97));box-shadow:0 0 18px rgba(30,144,255,.15),inset 0 0 24px rgba(56,168,255,.055);transition:border-color .2s,box-shadow .2s}
+.system-box:hover{border-color:rgba(103,247,255,.7);box-shadow:0 0 22px rgba(30,144,255,.22),inset 0 0 24px rgba(56,168,255,.08)}
+.system-box:before{content:'';position:absolute;left:0;top:0;width:3px;height:36px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);opacity:.8}
+.system-box:after{left:5%;width:90%;opacity:.85}
+.system-header{font-size:.9rem;letter-spacing:3px;text-shadow:0 0 9px rgba(103,247,255,.35)}
+.hero{gap:18px}
+.player-name{letter-spacing:1px;text-shadow:0 0 10px rgba(56,168,255,.2)}
+.level{font-size:2.5rem;color:#f0fcff;text-shadow:0 0 7px var(--line),0 0 22px rgba(56,168,255,.65);letter-spacing:1px}
+.rank{border-radius:2px;box-shadow:0 0 12px rgba(103,247,255,.13);text-shadow:0 0 6px rgba(103,247,255,.3)}
+.xp-wrap{height:15px;border-radius:2px;background:#020611;border-color:rgba(103,247,255,.45)}
+.xp-fill{background:linear-gradient(90deg,#1766d4,#39baff,#8fffff);box-shadow:0 0 15px #53eaff}
+.stat-card{border-radius:3px;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(7,23,47,.9),rgba(2,8,19,.95));border-color:rgba(56,168,255,.32);transition:transform .18s,border-color .18s,box-shadow .18s}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 0 14px rgba(56,168,255,.18)}
+.stat-name{letter-spacing:2px;color:#9fc9e8}.stat-val{text-shadow:0 0 10px rgba(103,247,255,.45)}
+.tabs{scrollbar-width:thin;scrollbar-color:#2178b9 transparent}
+.tab{border-radius:3px;border-color:rgba(56,168,255,.25);background:rgba(5,15,32,.72);letter-spacing:1px;transition:.18s}
+.tab.active{background:linear-gradient(180deg,rgba(31,125,212,.25),rgba(6,23,46,.95));box-shadow:0 0 13px rgba(56,168,255,.22);text-shadow:0 0 7px rgba(103,247,255,.4)}
+button,input,select{border-radius:3px}button{letter-spacing:1px}button:not(.tab){box-shadow:0 0 7px rgba(30,144,255,.07)}button.primary{background:linear-gradient(110deg,#10458d,#1489df);box-shadow:inset 0 0 12px rgba(103,247,255,.12)}
+.quest-item,.item-card,.achievement{border-radius:3px;background:linear-gradient(120deg,rgba(6,19,39,.95),rgba(3,10,22,.94));transition:border-color .18s,box-shadow .18s}
+.quest-item:hover,.item-card:hover,.achievement:hover{border-color:rgba(103,247,255,.65);box-shadow:0 0 12px rgba(56,168,255,.12)}
+.pill{border-radius:3px;text-shadow:0 0 5px rgba(103,247,255,.3)}
+.modal-card{border-radius:4px;background:linear-gradient(140deg,#0a2142,#030a18)}
+.footer{letter-spacing:2px;color:#72a6c8}
+@media(max-width:650px){body{padding:12px 10px 38px}.brand{letter-spacing:3px}.topbar:after{display:none}.system-box{padding:13px}.level{font-size:2.25rem}.tab{padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+<div class="container">
+<header class="topbar"><div><div class="brand">◈ THE SYSTEM</div><div class="subbrand">PLAYER DEVELOPMENT INTERFACE // V2.0</div></div><button class="ghost" id="soundToggle" onclick="toggleSound()">🔊 SOUND ON</button></header>
+
+<section class="system-box">
+ <div class="system-header">[ PLAYER STATUS ]</div>
+ <div class="hero">
+  <div><div class="muted small">PLAYER NAME</div><div class="player-name" id="playerNameDisplay">PLAYER</div><div class="level" id="levelDisplay">LV. 1</div><span class="rank" id="rankDisplay">E-RANK</span>
+   <div class="xp-wrap"><div class="xp-fill" id="xpFill"></div></div><div class="xp-row"><span id="xpCurrent">0 / 100 XP</span><span id="skillPoints">SKILL POINTS: 0</span></div>
+  </div>
+  <div><div class="muted small">PLAYER RECORD</div><div style="margin:8px 0"><b id="completedCount">0</b> <span class="muted small">QUESTS CLEARED</span></div><div style="margin:8px 0"><b id="streakDisplay">0 days</b> <span class="muted small">CURRENT STREAK</span></div><div style="margin:8px 0"><b id="loginDisplay">0</b> <span class="muted small">LOGIN DAYS</span></div><div style="margin-top:12px"><span class="pill" id="titleDisplay">TITLE: ROOKIE</span></div></div>
+ </div>
+ <div class="stats-grid">
+  <div class="stat-card"><div class="stat-name">STR</div><div class="stat-val" id="stat-STR">10</div></div>
+  <div class="stat-card"><div class="stat-name">AGI</div><div class="stat-val" id="stat-AGI">10</div></div>
+  <div class="stat-card"><div class="stat-name">INT</div><div class="stat-val" id="stat-INT">10</div></div>
+  <div class="stat-card"><div class="stat-name">VIT</div><div class="stat-val" id="stat-VIT">10</div></div>
+  <div class="stat-card"><div class="stat-name">WIL</div><div class="stat-val" id="stat-WIL">10</div></div>
+  <div class="stat-card"><div class="stat-name">TOTAL</div><div class="stat-val" id="totalStats">50</div></div>
+ </div>
+</section>
+
+<nav class="tabs">
+ <button class="tab active" data-tab="quests">QUESTS</button><button class="tab" data-tab="skills">SKILLS</button><button class="tab" data-tab="boss">BOSS RAID</button><button class="tab" data-tab="achievements">ACHIEVEMENTS</button><button class="tab" data-tab="inventory">INVENTORY</button><button class="tab" data-tab="profile">PROFILE / SAVE</button>
+</nav>
+
+<main>
+<section class="panel active" id="panel-quests">
+ <div class="system-box"><div class="system-header">[ ISSUE NEW QUEST ]</div><div class="form-row">
+  <input id="questTitle" maxlength="100" placeholder="Real-life task (e.g. Study for 1 hour)">
+  <div class="form-inline"><select id="questStat"><option value="STR">+ STR</option><option value="AGI">+ AGI</option><option value="INT">+ INT</option><option value="VIT">+ VIT</option><option value="WIL">+ WIL</option></select><select id="questXp"><option value="25">25 XP</option><option value="50" selected>50 XP</option><option value="100">100 XP</option><option value="200">200 XP</option></select><select id="questType"><option value="daily">Daily</option><option value="once">One-Time</option></select></div>
+  <button class="primary" onclick="addQuest()">＋ REGISTER QUEST</button>
+ </div></div>
+ <div class="system-box"><div class="section-head"><span>[ ACTIVE QUESTS ]</span><button class="ghost small" onclick="resetDailies()">NEW DAY RESET</button></div><div id="questList"></div></div>
+</section>
+
+<section class="panel" id="panel-skills">
+ <div class="system-box"><div class="system-header">[ ATTRIBUTE ALLOCATION ]</div><p class="muted small">Earn 1 skill point each time you level up. Spend points to strengthen your attributes.</p><div id="skillList"></div></div>
+</section>
+
+<section class="panel" id="panel-boss">
+ <div class="system-box"><div class="system-header">[ SPECIAL OPERATIONS // BOSS QUEST ]</div><p class="muted small">Boss quests are high-effort challenges. Clear one for bonus XP and a rare reward.</p>
+ <div class="form-row"><input id="bossTitle" maxlength="100" placeholder="Boss challenge (e.g. Finish a big project)"><div class="form-inline"><select id="bossStat"><option value="STR">STR</option><option value="AGI">AGI</option><option value="INT">INT</option><option value="VIT">VIT</option><option value="WIL">WIL</option></select><select id="bossXp"><option value="200">200 XP</option><option value="300" selected>300 XP</option><option value="500">500 XP</option><option value="1000">1000 XP</option></select><span class="pill" style="display:grid;place-items:center">RAID</span></div><button class="gold" onclick="addBoss()">＋ CREATE BOSS QUEST</button></div><div style="height:12px"></div><div id="bossList"></div>
+ </div>
+</section>
+
+<section class="panel" id="panel-achievements">
+ <div class="system-box"><div class="system-header">[ ACHIEVEMENT ARCHIVE ]</div><div class="achievement-grid" id="achievementList"></div></div>
+</section>
+
+<section class="panel" id="panel-inventory">
+ <div class="system-box"><div class="system-header">[ ITEM INVENTORY ]</div><p class="muted small">Items are awarded by milestones and boss victories. Collect them as proof of progress.</p><div class="inventory-grid" id="inventoryList"></div></div>
+</section>
+
+<section class="panel" id="panel-profile">
+ <div class="system-box"><div class="system-header">[ PLAYER PROFILE ]</div><div class="form-row"><label class="small muted" for="playerNameInput">PLAYER NAME</label><input id="playerNameInput" maxlength="24" placeholder="Enter player name"><button class="primary" onclick="saveProfile()">UPDATE PROFILE</button></div><p class="muted small">Your progress is stored in this browser on this device.</p></div>
+ <div class="system-box"><div class="system-header">[ DATA MANAGEMENT ]</div><div class="form-row"><button class="success" onclick="exportSave()">⬇ EXPORT SAVE BACKUP</button><label class="small muted" for="importFile">IMPORT SAVE BACKUP</label><input type="file" id="importFile" accept=".json,application/json"><button onclick="importSave()">⬆ IMPORT BACKUP</button><button class="danger" onclick="resetProgress()">RESET ALL PROGRESS</button><p class="muted small">Export a backup before clearing browser data or moving to another device. Import replaces the current save.</p></div></div>
+</section>
+</main>
+<div class="footer">SYSTEM ONLINE // YOUR REAL-LIFE PROGRESS IS YOUR POWER</div>
+</div>
+
+<div class="modal" id="systemModal"><div class="modal-card"><h2 id="modalTitle">[ SYSTEM ALERT ]</h2><p id="modalBody"></p><button class="primary" style="width:100%" onclick="closeModal()">CONFIRM</button></div></div>
+
+<script>
+'use strict';
+const STORAGE_KEY='solo_system_save_v1';
+const defaults={
+ level:1,xp:0,completedTotal:0,streak:0,stats:{STR:10,AGI:10,INT:10,VIT:10,WIL:10},
+ quests:[
+  {id:1,title:'Morning Workout / 30 Push-ups',stat:'STR',xp:50,type:'daily',done:false},
+  {id:2,title:'Read or Study for 45 Minutes',stat:'INT',xp:50,type:'daily',done:false},
+  {id:3,title:'Drink 2L of Water',stat:'VIT',xp:25,type:'daily',done:false}
+ ], skillPoints:0,bosses:[],achievements:[],inventory:[],playerName:'PLAYER',loginDays:0,lastLoginDate:'',lastResetDate:'',sound:true
+};
+let state=loadState();
+function loadState(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+  if(!saved)return structuredClone(defaults);
+  // Merge old v1 saves with new fields; existing XP, quests, stats and progress remain intact.
+  return {...structuredClone(defaults),...saved,stats:{...defaults.stats,...(saved.stats||{})},
+   quests:Array.isArray(saved.quests)?saved.quests:structuredClone(defaults.quests),
+   bosses:Array.isArray(saved.bosses)?saved.bosses:[],achievements:Array.isArray(saved.achievements)?saved.achievements:[],
+   inventory:Array.isArray(saved.inventory)?saved.inventory:[]};
+ }catch(e){console.warn('Save could not be read; starting with defaults.',e);return structuredClone(defaults)}
+}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){alert('Could not save. Please export a backup and check browser storage.');console.error(e)}}
+function xpRequired(level){return Math.max(100,level*100)}
+function rank(level){if(level>=50)return'S-RANK';if(level>=35)return'A-RANK';if(level>=20)return'B-RANK';if(level>=10)return'C-RANK';if(level>=5)return'D-RANK';return'E-RANK'}
+function safeText(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function alertSystem(title,message){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').textContent=message;document.getElementById('systemModal').classList.add('show')}
+
+function closeModal(){document.getElementById('systemModal').classList.remove('show');sound('confirm')}
+const audioFiles={click:'assets/sounds/click.mp3',confirm:'assets/sounds/confirm.mp3',quest:'assets/sounds/quest_complete.mp3',level:'assets/sounds/level_up.mp3',achievement:'assets/sounds/achievement.mp3',boss:'assets/sounds/boss_defeated.mp3',toggle:'assets/sounds/confirm.mp3'};
+const audioPlayers={};let ambiencePlayer=null;
+function sound(kind='click'){if(!state.sound)return;const src=audioFiles[kind]||audioFiles.click;try{if(!audioPlayers[kind])audioPlayers[kind]=new Audio(src);const player=audioPlayers[kind];player.pause();player.currentTime=0;player.play().catch(()=>{})}catch(e){}}
+function setAmbience(enabled){try{if(!ambiencePlayer){ambiencePlayer=new Audio('assets/sounds/ambience.mp3');ambiencePlayer.loop=true;ambiencePlayer.volume=0.18;}if(enabled){ambiencePlayer.play().catch(()=>{});}else{ambiencePlayer.pause();ambiencePlayer.currentTime=0;}}catch(e){}}
+function toggleSound(){state.sound=!state.sound;saveState();render();setAmbience(state.sound);if(state.sound)sound('toggle')}
+function addXp(amount){state.xp+=amount;let levels=0;while(state.xp>=xpRequired(state.level)){state.xp-=xpRequired(state.level);state.level++;state.skillPoints++;levels++}return levels}
+function awardItem(id){if(state.inventory.includes(id))return;state.inventory.push(id)}
+const achievementDefs=[
+ {id:'first',name:'First Steps',icon:'🌱',desc:'Clear your first quest',test:()=>state.completedTotal>=1,reward:'Starter Badge'},
+ {id:'ten',name:'Getting Stronger',icon:'⚔️',desc:'Clear 10 quests',test:()=>state.completedTotal>=10,reward:'Warrior Emblem'},
+ {id:'fifty',name:'Relentless',icon:'🔥',desc:'Clear 50 quests',test:()=>state.completedTotal>=50,reward:'Flame Token'},
+ {id:'level5',name:'Awakening',icon:'✨',desc:'Reach level 5',test:()=>state.level>=5,reward:'Awakening Crystal'},
+ {id:'level10',name:'Rising Hunter',icon:'🏅',desc:'Reach level 10',test:()=>state.level>=10,reward:'Hunter Medal'},
+ {id:'streak7',name:'Consistency',icon:'📅',desc:'Reach a 7-day streak',test:()=>state.streak>=7,reward:'Seven-Day Crest'},
+ {id:'boss1',name:'Boss Slayer',icon:'🐉',desc:'Clear your first boss quest',test:()=>state.bosses.some(b=>b.done),reward:'Dragon Scale'}
+];
+function checkAchievements(){for(const a of achievementDefs){if(a.test()&&!state.achievements.includes(a.id)){state.achievements.push(a.id);awardItem(a.id);alertSystem('[ ACHIEVEMENT UNLOCKED ]',`${a.name} — ${a.desc}. Reward acquired: ${a.reward}.`);sound('achievement')}}}
+function render(){
+ const req=xpRequired(state.level),pct=Math.min(100,state.xp/req*100);
+ document.getElementById('playerNameDisplay').textContent=state.playerName||'PLAYER';
+ document.getElementById('levelDisplay').textContent=`LV. ${state.level}`;
+ document.getElementById('rankDisplay').textContent=rank(state.level);
+ document.getElementById('xpFill').style.width=pct+'%';
+ document.getElementById('xpCurrent').textContent=`${state.xp} / ${req} XP`;
+ document.getElementById('skillPoints').textContent=`SKILL POINTS: ${state.skillPoints}`;
+ document.getElementById('completedCount').textContent=state.completedTotal;
+ document.getElementById('streakDisplay').textContent=`${state.streak} days`;
+ document.getElementById('loginDisplay').textContent=state.loginDays;
+ document.getElementById('titleDisplay').textContent='TITLE: '+(state.level>=20?'ELITE HUNTER':state.level>=10?'RISING HUNTER':state.level>=5?'AWAKENED':state.completedTotal>=1?'ROOKIE HUNTER':'ROOKIE');
+ document.getElementById('totalStats').textContent=Object.values(state.stats).reduce((a,b)=>a+b,0);
+ for(const k of Object.keys(state.stats))document.getElementById('stat-'+k).textContent=state.stats[k];
+ document.getElementById('soundToggle').textContent=state.sound?'🔊 SOUND ON':'🔇 SOUND OFF';
+ renderQuests();renderSkills();renderBosses();renderAchievements();renderInventory();
+}
+function renderQuests(){
+ const list=document.getElementById('questList');list.innerHTML='';
+ if(!state.quests.length){list.innerHTML='<div class="empty">No active quests. Register a task above.</div>';return}
+ state.quests.forEach(q=>{const el=document.createElement('div');el.className='quest-item'+(q.done?' completed':'');
+ el.innerHTML=`<div class="quest-info"><h4>${safeText(q.title)}</h4><div class="quest-meta">[${safeText(q.type.toUpperCase())}] • +${Number(q.xp)||0} XP • +1 ${safeText(q.stat)}</div></div><div class="actions"><button class="success" ${q.done?'disabled':''} onclick="completeQuest(${Number(q.id)})">${q.done?'DONE':'CLEAR'}</button><button class="danger" onclick="deleteQuest(${Number(q.id)})">✕</button></div>`;list.appendChild(el)})
+}
+function addQuest(){const input=document.getElementById('questTitle'),title=input.value.trim();if(!title){alertSystem('[ SYSTEM NOTICE ]','Enter a quest name first.');return}
+ state.quests.push({id:Date.now(),title,stat:document.getElementById('questStat').value,xp:Number(document.getElementById('questXp').value),type:document.getElementById('questType').value,done:false});input.value='';saveState();render();sound('click')}
+function completeQuest(id){const q=state.quests.find(x=>x.id===id);if(!q||q.done)return;q.done=true;state.stats[q.stat]=(state.stats[q.stat]||10)+1;state.completedTotal++;const levels=addXp(Number(q.xp)||0);if(q.type==='once')state.quests=state.quests.filter(x=>x.id!==id);saveState();render();checkAchievements();saveState();sound(levels?'level':'quest');if(levels)alertSystem('[ LEVEL UP ]',`You reached level ${state.level}! ${levels} level(s) gained and ${levels} skill point(s) awarded.`);else alertSystem('[ QUEST CLEARED ]',`${q.title} — +${q.xp} XP and +1 ${q.stat}.`)}
+function deleteQuest(id){state.quests=state.quests.filter(q=>q.id!==id);saveState();render()}
+function resetDailies(){const d=state.quests.filter(q=>q.type==='daily');if(!d.length){alertSystem('[ SYSTEM NOTICE ]','There are no daily quests to refresh.');return}const date=today();if(state.lastResetDate===date){alertSystem('[ RESET UNAVAILABLE ]','Daily quests have already been refreshed today.');return}
+ const cleared=d.every(q=>q.done);if(cleared)state.streak++;else state.streak=0;state.lastResetDate=date;state.quests.forEach(q=>{if(q.type==='daily')q.done=false});saveState();render();checkAchievements();saveState();alertSystem('[ DAILY QUESTS REFRESHED ]',cleared?`All daily quests cleared. Streak: ${state.streak} days.`:'Daily quests refreshed. Complete all daily quests next time to build your streak.')}
+function renderSkills(){const el=document.getElementById('skillList');el.innerHTML='';for(const key of ['STR','AGI','INT','VIT','WIL']){const row=document.createElement('div');row.className='stat-upgrade';row.innerHTML=`<div><b>${key}</b><div class="small muted">Current: ${state.stats[key]}</div></div><button class="success" ${state.skillPoints<1?'disabled':''} onclick="allocate('${key}')">＋ 1 POINT</button>`;el.appendChild(row)}}
+function allocate(key){if(state.skillPoints<1)return;state.skillPoints--;state.stats[key]++;saveState();render();sound('confirm')}
+function addBoss(){const title=document.getElementById('bossTitle').value.trim();if(!title){alertSystem('[ SYSTEM NOTICE ]','Name your boss challenge first.');return}state.bosses.push({id:Date.now(),title,stat:document.getElementById('bossStat').value,xp:Number(document.getElementById('bossXp').value),done:false});document.getElementById('bossTitle').value='';saveState();render();sound('click')}
+function renderBosses(){const el=document.getElementById('bossList');el.innerHTML='';if(!state.bosses.length){el.innerHTML='<div class="empty">No boss challenges registered.</div>';return}state.bosses.forEach(b=>{const row=document.createElement('div');row.className='quest-item'+(b.done?' completed':'');row.innerHTML=`<div class="quest-info"><h4>🐉 ${safeText(b.title)}</h4><div class="quest-meta">BOSS RAID • +${b.xp} XP • +2 ${safeText(b.stat)}</div></div><div class="actions"><button class="gold" ${b.done?'disabled':''} onclick="completeBoss(${Number(b.id)})">${b.done?'CLEARED':'DEFEAT'}</button><button class="danger" onclick="deleteBoss(${Number(b.id)})">✕</button></div>`;el.appendChild(row)})}
+function completeBoss(id){const b=state.bosses.find(x=>x.id===id);if(!b||b.done)return;b.done=true;state.stats[b.stat]=(state.stats[b.stat]||10)+2;state.completedTotal++;const levels=addXp(b.xp);awardItem('boss-token');saveState();render();checkAchievements();saveState();sound('boss');alertSystem('[ BOSS DEFEATED ]',`${b.title} cleared! +${b.xp} XP, +2 ${b.stat}, and a Boss Token. ${levels?levels+' level(s) gained!':''}`)}
+function deleteBoss(id){state.bosses=state.bosses.filter(b=>b.id!==id);saveState();render()}
+function renderAchievements(){const el=document.getElementById('achievementList');el.innerHTML='';achievementDefs.forEach(a=>{const unlocked=state.achievements.includes(a.id);const card=document.createElement('div');card.className='achievement'+(unlocked?'':' locked');card.innerHTML=`<div class="item-icon">${a.icon}</div><b>${a.name}</b><div class="small muted">${a.desc}</div><div class="small" style="color:${unlocked?'var(--green)':'var(--muted)'};margin-top:7px">${unlocked?'UNLOCKED':'LOCKED'} · ${a.reward}</div>`;el.appendChild(card)})}
+const itemDefs=[['first','🌱','Starter Badge','Your first step forward.'],['ten','⚔️','Warrior Emblem','Proof of ten cleared quests.'],['fifty','🔥','Flame Token','A mark of persistence.'],['level5','✨','Awakening Crystal','Your power has awakened.'],['level10','🏅','Hunter Medal','A rising hunter’s medal.'],['streak7','📅','Seven-Day Crest','A week of consistency.'],['boss1','🐉','Dragon Scale','Taken from your first boss.'],['boss-token','🎁','Boss Token','Reward for clearing a boss quest.']];
+function renderInventory(){const el=document.getElementById('inventoryList');el.innerHTML='';itemDefs.forEach(([id,icon,name,desc])=>{const owned=state.inventory.includes(id);const card=document.createElement('div');card.className='item-card'+(owned?'':' locked');card.innerHTML=`<div class="item-icon">${icon}</div><b>${name}</b><div class="small muted">${desc}</div><div class="small" style="margin-top:7px;color:${owned?'var(--green)':'var(--muted)'}">${owned?'OWNED':'NOT ACQUIRED'}</div>`;el.appendChild(card)})}
+function saveProfile(){const name=document.getElementById('playerNameInput').value.trim();if(!name){alertSystem('[ SYSTEM NOTICE ]','Enter a player name.');return}state.playerName=name;saveState();render();alertSystem('[ PROFILE UPDATED ]',`Welcome, ${name}.`)}
+async function exportSave(){
+ const backupText=JSON.stringify(state,null,2);
+ const backupFileName='the-system-save.json';
+ try{
+  if(typeof navigator.share==='function'&&typeof File==='function'){
+   const file=new File([backupText],backupFileName,{type:'application/json'});
+   if(!navigator.canShare||navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'THE SYSTEM Save Backup'});alertSystem('[ BACKUP SHARED ]','Choose Save to Files or another safe destination to store your backup.');return;}
+  }
+ }catch(e){if(e&&e.name==='AbortError')return;}
+ try{
+  const blob=new Blob([backupText],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=backupFileName;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);alertSystem('[ BACKUP EXPORT ]','If a download did not start, the backup text will open next so you can copy it manually.');return;
+ }catch(e){}
+ prompt('Copy all the backup text below, then save it as the-system-save.json:',backupText);
+}
+function importSave(){const file=document.getElementById('importFile').files[0];if(!file){alertSystem('[ SYSTEM NOTICE ]','Choose a JSON backup file first.');return}const reader=new FileReader();reader.onload=()=>{try{const imported=JSON.parse(reader.result);if(!imported||typeof imported!=='object'||!imported.stats||!Array.isArray(imported.quests))throw Error('Invalid save');state={...structuredClone(defaults),...imported,stats:{...defaults.stats,...imported.stats},bosses:Array.isArray(imported.bosses)?imported.bosses:[],achievements:Array.isArray(imported.achievements)?imported.achievements:[],inventory:Array.isArray(imported.inventory)?imported.inventory:[]};saveState();render();alertSystem('[ SAVE IMPORTED ]','Your backup has been loaded.')}catch(e){alertSystem('[ IMPORT FAILED ]','That file is not a valid THE SYSTEM save backup.')}};reader.readAsText(file)}
+function resetProgress(){if(!confirm('This permanently resets THE SYSTEM progress in this browser. Export a backup first. Continue?'))return;state=structuredClone(defaults);saveState();render();alertSystem('[ SYSTEM RESET ]','A new player profile has been initialized.')}
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='panel-'+btn.dataset.tab));sound('click')}));
+function dailyLogin(){const date=today();if(state.lastLoginDate!==date){state.loginDays++;state.lastLoginDate=date;saveState()}}
+dailyLogin();document.getElementById('playerNameInput').value=state.playerName||'';
+render();
+</script>
+</body>
+</html>

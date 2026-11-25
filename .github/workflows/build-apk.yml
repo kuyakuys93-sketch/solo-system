@@ -17,7 +17,7 @@ jobs:
       - name: Extract Android project
         run: |
           mkdir -p project
-          ZIP=$(find . -maxdepth 1 -type f -name '*.zip' | head -n 1)
+          ZIP=$(find . -maxdepth 1 -type f -name '*.zip' -print -quit)
           if [ -z "$ZIP" ]; then
             echo "Android project ZIP not found"
             exit 1
@@ -42,7 +42,9 @@ jobs:
           java-version: '17'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
